@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { ChangeEvent, useState } from 'react';
 
 import Dropdown from '../containers/Dropdown/Dropdown';
 import Nav from '../components/global/nav';
@@ -9,21 +10,53 @@ import Upload from '../containers/Upload/Upload';
 
 export interface ILayoutProps {
 	children: React.ReactNode;
-	providers: any;
+	fantasyData: any;
 	sports: any;
 }
 
-const Dashboard = ({ children, providers, sports }: ILayoutProps) => (
-	<div className="md:flex md:min-h-screen text-blue-800">
-		<Nav />
+const Dashboard = ({ children, fantasyData, sports }: ILayoutProps) => {
+	console.log(fantasyData);
 
-		<main className="w-full">
-			<div className="border-b border-gray-300">
-				<div className="py-4 px-6 md:p-8 md:flex justify-between">
-					<div className="space-x-4 flex mb-4 md:mb-0 justify-center">
-						<Sports />
-					</div>
-					<div className="items-center flex-1 md:ml-56">
+	const [provider, setProvider] = useState(0);
+
+	const handleProviderChange = (e: ChangeEvent<HTMLSelectElement>) => {
+		setProvider(parseInt(e.currentTarget.value));
+	};
+
+	return (
+		<div className="md:flex md:min-h-screen text-blue-800">
+			<Nav />
+
+			<main className="w-full">
+				<div className="border-b border-gray-300">
+					<div className="py-4 px-6 md:p-8 md:flex justify-between">
+						<div className="space-x-4 flex mb-4 md:mb-0 justify-center">
+							{/* <Sports /> */}
+							<select
+								name=""
+								id=""
+								defaultValue={provider}
+								onChange={handleProviderChange}
+							>
+								{fantasyData.map(
+									(
+										{ SlateID, Operator, OperatorGameType },
+										i
+									) => (
+										<option value={i} key={SlateID}>
+											{Operator} - {OperatorGameType}
+										</option>
+									)
+								)}
+							</select>
+
+							<select name="" id="">
+								{fantasyData[provider].DfsSlateGames.map(games => (
+									<option value=""></option>
+								))}
+							</select>
+						</div>
+						{/* <div className="items-center flex-1 md:ml-56">
 						{providers && (
 							<>
 								{sports.sport && (
@@ -41,18 +74,19 @@ const Dashboard = ({ children, providers, sports }: ILayoutProps) => (
 								)}
 							</>
 						)}
+					</div> */}
 					</div>
 				</div>
-			</div>
 
-			{children}
-		</main>
-	</div>
-);
+				{children}
+			</main>
+		</div>
+	);
+};
 
-const mapStateToProps = ({ providers, sports }) => ({
-	providers,
+const mapStateToProps = ({ sports, fantasyData }) => ({
 	sports,
+	fantasyData,
 });
 
 export default connect(mapStateToProps)(Dashboard);

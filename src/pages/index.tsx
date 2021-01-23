@@ -12,6 +12,7 @@ import Table from '../containers/Table/Table';
 import { SET_SPORTS } from '../containers/Sports/Sports.actions';
 import { ISports } from '../interfaces/ISports';
 import Loading from '../components/loading';
+import { SET_FANTASY_DATA } from '../containers/FantasyData/fantasyData.actions';
 
 const API = process.env.ENDPOINT;
 
@@ -81,12 +82,19 @@ export const getServerSideProps = async () => {
 	const { dispatch } = reduxStore;
 
 	const response = await fetch(API);
-	const sports: ISports[] = await response.json();
+	const data = await response.json();
 
 	dispatch({
-		type: SET_SPORTS,
-		sports,
+		type: SET_FANTASY_DATA,
+		data,
 	});
+
+	// const sports: ISports[] = await response.json();
+
+	// dispatch({
+	// 	type: SET_SPORTS,
+	// 	sports,
+	// });
 
 	// dispatch({
 	// 	type: FETCH_CONTESTS,
